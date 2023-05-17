@@ -1,6 +1,5 @@
 import { Layout } from 'antd';
-import AppBody from './components/AppBody';
-import AppHeader from './components/AppHeader';
+import { AppBody, AppHeader } from './components';
 import './App.scss';
 
 const App = () => {

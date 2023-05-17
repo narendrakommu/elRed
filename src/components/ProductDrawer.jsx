@@ -1,8 +1,7 @@
 import { Button, Card, Drawer, InputNumber, Space, Typography } from "antd"
-import CategoryCard from "../../CategoryCard"
 import { useEffect, useState } from "react"
-import OrderListTable from "./OrderListTable";
-import { COLORDESCRIPTION, VARIANT } from "../../constants";
+import { OrderListTable, CategoryCard } from "../components";
+import { COLORDESCRIPTION, VARIANT } from "../constants";
 
 const { Text, Title } = Typography;
 
@@ -92,4 +91,4 @@ const ProductDrawer = ({ handleOrderList, orderList, onDrawerClose, drawerOpen, 
     </Drawer>
 }
 
-export default ProductDrawer;
+export { ProductDrawer };

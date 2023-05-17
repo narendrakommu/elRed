@@ -1,6 +1,6 @@
 import { Image, Input, Dropdown, Button, Space, Layout } from "antd";
 import { SearchOutlined, DownOutlined, UserOutlined } from "@ant-design/icons";
-import { companyLogoUrl, userMenuProps } from "./constants";
+import { companyLogoUrl, userMenuProps } from "../constants";
 
 const { Header } = Layout;
 
@@ -28,4 +28,4 @@ const AppHeader = () => {
     );
 };
 
-export default AppHeader;
+export { AppHeader };

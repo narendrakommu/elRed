@@ -1,6 +1,6 @@
 import { Button, Table, Typography } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
-import TableList from "./TableList";
+import { TableList } from "../components";
 
 const { Text, Title } = Typography;
 
@@ -13,9 +13,9 @@ const OrderListTable = ({ orderList = [], handleDeleteorderItem, handleOrderList
                 <CloseOutlined onClick={() => { onDrawerClose() }} />
             </div>
             <TableList list={orderList} handleDeleteorderItem={handleDeleteorderItem} />
-            <Button disabled={!orderList.length} className="add-cart" type="primary" onClick={() => { handleCart({ data: orderList }); handleOrderList({ data: null, isClearAll: true }); onDrawerClose(true); }}>Add Cart</Button>
+            <Button disabled={!orderList.length} className="add-cart" type="primary" onClick={() => { handleCart({ data: orderList }); handleOrderList({ data: null, isClearAll: true }); onDrawerClose(true); }}>Add to cart</Button>
         </div>
     );
 }
 
-export default OrderListTable;
+export { OrderListTable };

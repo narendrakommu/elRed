@@ -1,7 +1,7 @@
 import { Layout } from 'antd';
-import CategoryCard from '../../CategoryCard';
+import { CategoryCard } from '../components';
 import { HomeFilled } from "@ant-design/icons";
-import { SUBCATEGORY } from '../../constants';
+import { SUBCATEGORY } from '../constants';
 
 const { Footer } = Layout;
 
@@ -32,4 +32,4 @@ const ContentFooter = ({ subCategories, handleSelectedItem, handleSubCategoryPro
     </Footer>
 }
 
-export default ContentFooter;
+export { ContentFooter };

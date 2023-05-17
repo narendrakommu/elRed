@@ -1,5 +1,5 @@
 import { Table, Layout, Row, Col, Divider, Space, Button, Typography, message } from "antd";
-import TableList from "./content/TableList";
+import { TableList } from "../components";
 
 const { Title } = Typography;
 const { Sider } = Layout;
@@ -19,7 +19,7 @@ const Cart = ({ cart = [], handleCart, handleOrderList }) => {
     return (
         <Sider className="main-content-layout-sidebar">
             <TableList list={cart} isCart={true} handleOrderList={handleOrderList} />
-            {cart.length && <div>
+            {cart.length > 0 && <div className="cart-price-details">
                 {['items total', 'SGST(9%)', 'CGST(9%)', 'IGST(9%)', 'Taxable Amnt'].map(ele => <Row className="row-child">
                     <Col className='column-header' span={18}>{ele}</Col>
                     <Col className='column-value' span={6}>
@@ -44,4 +44,4 @@ const Cart = ({ cart = [], handleCart, handleOrderList }) => {
     );
 };
 
-export default Cart;
+export { Cart };

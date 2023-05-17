@@ -1,5 +1,5 @@
 import { Table } from "antd"
-import { orderListDatasource, orderListcolumns } from "../../helperMethods"
+import { orderListDatasource, orderListcolumns } from "../helperMethods"
 
 
 const TableList = ({ list, handleDeleteorderItem = () => { }, isCart, handleOrderList }) => {
@@ -18,4 +18,4 @@ const TableList = ({ list, handleDeleteorderItem = () => { }, isCart, handleOrde
     )
 }
 
-export default TableList;
+export { TableList };

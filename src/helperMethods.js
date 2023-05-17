@@ -5,11 +5,11 @@ import {
 
 const { Paragraph, Text, Title } = Typography;
 
-export const orderListcolumns = ({ isCart, handleOrderList, list }) => {
+export const orderListcolumns = ({ isCart, handleOrderList, list=[] }) => {
     let columnsData = [ ];
 	[ 'Products', 'Quantity', 'Price' ].forEach((ele) => {
 		columnsData.push({
-			title: () => <Tooltip mouseEnterDelay={0.7} title={ele}>{(ele === 'Price') && isCart ? <>{ele}{<EditOutlined className='edit-icon' onClick={() => {handleOrderList({data: list, isEdit: true})}}/>}</> : ele}</Tooltip>,
+			title: () => <Tooltip mouseEnterDelay={0.7} title={ele}>{(ele === 'Price') && isCart && list.length ? <div className="price-title-wrap">{ele}{<EditOutlined className='edit-icon' onClick={() => {handleOrderList({data: list, isEdit: true})}}/>}</div> : ele}</Tooltip>,
 			dataIndex: ele,
 			key: ele,
 			className: 'order-list-table-ellipsis',
@@ -20,8 +20,8 @@ export const orderListcolumns = ({ isCart, handleOrderList, list }) => {
                             <Image
                                 className="product-logo"
                                 preview={false}
-                                width={25}
-                                height={25}
+                                // width={25}
+                                // height={25}
                                 src={record.imageUrl}
                             />
                             <div className="product-text">

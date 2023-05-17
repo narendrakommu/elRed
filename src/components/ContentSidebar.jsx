@@ -1,5 +1,5 @@
 import { Menu, Layout, Image } from "antd";
-import { companyLogoUrl, contentSidebarMenuItems } from "../../constants";
+import { companyLogoUrl, contentSidebarMenuItems } from "../constants";
 
 const { Sider } = Layout;
 
@@ -24,4 +24,4 @@ const ContentSidebar = () => {
     );
 };
 
-export default ContentSidebar;
+export { ContentSidebar };

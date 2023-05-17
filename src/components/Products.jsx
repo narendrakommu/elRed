@@ -1,6 +1,5 @@
-import CategoryCard from "../../CategoryCard"
-import { PRODUCT } from "../../constants";
-import ProductDrawer from "./ProductDrawer";
+import { PRODUCT } from "../constants";
+import { CategoryCard } from "../components";
 
 const Products = ({ handleOrderList, orderList, subCategoryProducts, handleSelectedItem, selectedProduct, handleCart, handleDeleteorderItem, isEditOrders, onDrawerClose, drawerOpen, setDrawerOpen }) => {
 
@@ -20,8 +19,7 @@ const Products = ({ handleOrderList, orderList, subCategoryProducts, handleSelec
                 item={product}
             />
         )) : <p>There are no products for this sub category</p>}
-        {drawerOpen && <ProductDrawer isEditOrders={isEditOrders} handleDeleteorderItem={handleDeleteorderItem} orderList={orderList} handleOrderList={handleOrderList} handleCart={handleCart} drawerOpen={drawerOpen} onDrawerClose={onDrawerClose} selectedProduct={selectedProduct} />}
     </div>
 }
 
-export default Products;
+export { Products };

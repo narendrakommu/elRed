@@ -1,6 +1,6 @@
 import { Divider } from "antd"
-import CategoryCard from "../../CategoryCard"
-import { CATEGORY, SUBCATEGORY } from "../../constants";
+import { CategoryCard } from "../components"
+import { CATEGORY, SUBCATEGORY } from "../constants";
 
 const CategoriesAndSubCategories = ({ categories, subCategories, handleSelectedItem, selectedCategoryId }) => {
     return <>
@@ -38,4 +38,4 @@ const CategoriesAndSubCategories = ({ categories, subCategories, handleSelectedI
     </>
 }
 
-export default CategoriesAndSubCategories;
+export { CategoriesAndSubCategories };

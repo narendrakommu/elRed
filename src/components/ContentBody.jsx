@@ -1,7 +1,6 @@
 import { Input, Typography, Layout } from "antd";
 import { SearchOutlined, ArrowLeftOutlined } from "@ant-design/icons";
-import CategoriesAndSubCategories from "./CategoriesAndSubCategories";
-import Products from "./Products";
+import { Products, CategoriesAndSubCategories } from "../components";
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -27,4 +26,4 @@ const ContentBody = ({ orderList, handleOrderList, handleSubCategoryProducts, su
     </Content>
 }
 
-export default ContentBody;
+export { ContentBody };

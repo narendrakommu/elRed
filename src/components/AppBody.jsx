@@ -1,10 +1,7 @@
 import { Layout } from 'antd';
-import ContentSidebar from './mainContent/content/ContentSidebar';
-import ContentFooter from './mainContent/content/ContentFooter';
-import ContentBody from './mainContent/content/ContentBody';
-import Cart from './mainContent/Cart';
+import { ContentSidebar, ContentFooter, ContentBody, Cart, ProductDrawer } from '../components';
 import { useEffect, useState } from 'react';
-import { CATEGORY, PRODUCT, SUBCATEGORY, categoriesUrl } from './constants';
+import { CATEGORY, PRODUCT, SUBCATEGORY, categoriesUrl } from '../constants';
 
 const AppBody = () => {
     const [categories, setCategories] = useState([]);
@@ -143,7 +140,8 @@ const AppBody = () => {
             {subCategoryProducts && <ContentFooter selectedSubCategoryId={selectedSubCategoryId} subCategories={subCategories} handleSelectedItem={handleSelectedItem} handleSubCategoryProducts={handleSubCategoryProducts} handleSelectedSubCategoryId={handleSelectedSubCategoryId} />}
         </Layout>
         <Cart cart={cart} handleCart={handleCart} handleOrderList={handleOrderList} />
+        {drawerOpen && <ProductDrawer isEditOrders={isEditOrders} handleDeleteorderItem={handleDeleteorderItem} orderList={orderList} handleOrderList={handleOrderList} handleCart={handleCart} drawerOpen={drawerOpen} onDrawerClose={onDrawerClose} selectedProduct={selectedProduct} />}
     </Layout>
 }
 
-export default AppBody;
+export { AppBody };

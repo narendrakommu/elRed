@@ -1,5 +1,5 @@
 import { Card, Typography } from "antd";
-import { PRODUCT, VARIANT, defaultImage } from "./constants";
+import { PRODUCT, VARIANT, defaultImage } from "../constants";
 
 const { Title, Paragraph } = Typography;
 const { Meta } = Card;
@@ -59,7 +59,12 @@ const CategoryCard = ({
                             {variants?.currency?.symbol}{grossPrice}
                         </span>
                     </div>
-                </> : name}
+                </> : <Paragraph ellipsis={{
+                    tooltip: name,
+                    rows: 1,
+                }} className={`variant-sale-description`}>
+                    {name}
+                </Paragraph>}
             </div>} description={<Paragraph ellipsis={{
                 tooltip: discription,
                 rows: 2,
@@ -70,4 +75,4 @@ const CategoryCard = ({
     );
 };
 
-export default CategoryCard;
+export { CategoryCard };
