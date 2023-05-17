@@ -1,13 +1,10 @@
 import { Button, Table, Typography } from "antd";
-import { orderListDatasource, orderListcolumns } from "../../../constants";
-import {
-    CloseOutlined
-} from "@ant-design/icons";
-import { TableList } from "./TableList";
+import { CloseOutlined } from "@ant-design/icons";
+import TableList from "./TableList";
 
 const { Text, Title } = Typography;
 
-export const OrderListTable = ({ orderList = [], handleDeleteorderItem, handleOrderList, handleCart, onDrawerClose }) => {
+const OrderListTable = ({ orderList = [], handleDeleteorderItem, handleOrderList, handleCart, onDrawerClose }) => {
 
     return (
         <div className="variant-table-wrap">
@@ -20,3 +17,5 @@ export const OrderListTable = ({ orderList = [], handleDeleteorderItem, handleOr
         </div>
     );
 }
+
+export default OrderListTable;

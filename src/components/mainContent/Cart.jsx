@@ -1,27 +1,10 @@
 import { Table, Layout, Row, Col, Divider, Space, Button, Typography, message } from "antd";
-import { TableList } from "./content/TableList";
+import TableList from "./content/TableList";
 
 const { Title } = Typography;
-
 const { Sider } = Layout;
-const columns = [
-    {
-        title: "Products",
-        dataIndex: "Products",
-        key: "Products"
-    },
-    {
-        title: "Quantity",
-        dataIndex: "Quantity",
-        key: "Quantity"
-    },
-    {
-        title: "Price",
-        dataIndex: "Price",
-        key: "Price"
-    }
-];
-export const Cart = ({ cart = [], handleCart, handleOrderList, setDrawerOpen }) => {
+
+const Cart = ({ cart = [], handleCart, handleOrderList }) => {
     const totalGross = cart.reduce((acc, curr) => acc + parseInt(curr.grossPrice), 0);
     const taxableAmnt = Math.floor(0.27 * totalGross);
     const tax = Math.floor(0.09 * totalGross);
@@ -35,7 +18,7 @@ export const Cart = ({ cart = [], handleCart, handleOrderList, setDrawerOpen }) 
 
     return (
         <Sider className="main-content-layout-sidebar">
-            <TableList list={cart} isCart={true} handleOrderList={handleOrderList} setDrawerOpen={setDrawerOpen} />
+            <TableList list={cart} isCart={true} handleOrderList={handleOrderList} />
             {cart.length && <div>
                 {['items total', 'SGST(9%)', 'CGST(9%)', 'IGST(9%)', 'Taxable Amnt'].map(ele => <Row className="row-child">
                     <Col className='column-header' span={18}>{ele}</Col>
@@ -60,3 +43,5 @@ export const Cart = ({ cart = [], handleCart, handleOrderList, setDrawerOpen }) 
         </Sider>
     );
 };
+
+export default Cart;

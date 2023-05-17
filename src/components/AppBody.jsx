@@ -1,14 +1,15 @@
 import { Layout } from 'antd';
-import { ContentSidebar } from './content/ContentSidebar';
-import { CATEGORY, ContentBody, PRODUCT, SUBCATEGORY } from './content/ContentBody';
-import { ContentFooter } from './content/ContentFooter';
-import { Cart } from './Cart';
+import ContentSidebar from './mainContent/content/ContentSidebar';
+import ContentFooter from './mainContent/content/ContentFooter';
+import ContentBody from './mainContent/content/ContentBody';
+import Cart from './mainContent/Cart';
 import { useEffect, useState } from 'react';
+import { CATEGORY, PRODUCT, SUBCATEGORY, categoriesUrl } from './constants';
 
-export const MainContentLayout = () => {
+const AppBody = () => {
     const [categories, setCategories] = useState([]);
     const [selectedCategoryId, setSelectedCategoryId] = useState("");
-    const [subCategories, setSubCategories] = useState([]);
+    const [subCategories, setSubCategories] = useState(undefined);
     const [selectedSubCategoryId, setSelectedSubCategoryId] = useState("");
     const [subCategoryProducts, setSubCategoryProducts] = useState();
     const [selectedProduct, setSelectedProduct] = useState();
@@ -105,12 +106,9 @@ export const MainContentLayout = () => {
     }
 
     useEffect(() => {
-        fetch(
-            "https://elredtest.s3.amazonaws.com/reactAssignment/getCategories.json"
-        )
+        fetch(categoriesUrl)
             .then((res) => res.json())
             .then((res) => {
-                console.log(res, 'cate');
                 setCategories(res.result);
             });
     }, []);
@@ -122,7 +120,6 @@ export const MainContentLayout = () => {
             )
                 .then((res) => res.json())
                 .then((res) => {
-                    console.log(res, "sub");
                     setSubCategories(res.result);
                 });
     }, [selectedCategoryId]);
@@ -133,7 +130,6 @@ export const MainContentLayout = () => {
         )
             .then((res) => res.json())
             .then((res) => {
-                console.log(res, "products");
                 setSubCategoryProducts(res.result);
             });
     }, [selectedSubCategoryId])
@@ -142,10 +138,12 @@ export const MainContentLayout = () => {
         <Layout>
             <Layout>
                 <ContentSidebar />
-                <ContentBody handleOrderList={handleOrderList} orderList={orderList} handleCart={handleCart} handleSubCategoryProducts={handleSubCategoryProducts} subCategoryProducts={subCategoryProducts} subCategories={subCategories} handleSubCategories={handleSubCategories} handleSelectedSubCategoryId={handleSelectedSubCategoryId} handleSelectedItem={handleSelectedItem} categories={categories} selectedCategoryId={selectedCategoryId} selectedProduct={selectedProduct} handleSelectedProduct={handleSelectedProduct} handleDeleteorderItem={handleDeleteorderItem} isEditOrders={isEditOrders} setIsEditOrders drawerOpen={drawerOpen} onDrawerClose={onDrawerClose} setDrawerOpen={setDrawerOpen} />
+                <ContentBody handleOrderList={handleOrderList} orderList={orderList} handleCart={handleCart} handleSubCategoryProducts={handleSubCategoryProducts} subCategoryProducts={subCategoryProducts} subCategories={subCategories} handleSubCategories={handleSubCategories} handleSelectedSubCategoryId={handleSelectedSubCategoryId} handleSelectedItem={handleSelectedItem} categories={categories} selectedCategoryId={selectedCategoryId} selectedProduct={selectedProduct} handleSelectedProduct={handleSelectedProduct} handleDeleteorderItem={handleDeleteorderItem} isEditOrders={isEditOrders} setIsEditOrders={setIsEditOrders} drawerOpen={drawerOpen} onDrawerClose={onDrawerClose} setDrawerOpen={setDrawerOpen} />
             </Layout>
             {subCategoryProducts && <ContentFooter selectedSubCategoryId={selectedSubCategoryId} subCategories={subCategories} handleSelectedItem={handleSelectedItem} handleSubCategoryProducts={handleSubCategoryProducts} handleSelectedSubCategoryId={handleSelectedSubCategoryId} />}
         </Layout>
-        <Cart cart={cart} handleCart={handleCart} handleOrderList={handleOrderList} setDrawerOpen={setDrawerOpen} />
+        <Cart cart={cart} handleCart={handleCart} handleOrderList={handleOrderList} />
     </Layout>
 }
+
+export default AppBody;

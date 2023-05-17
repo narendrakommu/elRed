@@ -1,8 +1,8 @@
 import { Divider } from "antd"
-import { CategoryCard } from "../../CategoryCard"
-import { CATEGORY, SUBCATEGORY } from "./ContentBody"
+import CategoryCard from "../../CategoryCard"
+import { CATEGORY, SUBCATEGORY } from "../../constants";
 
-export const CategoriesAndSubCategories = ({ categories, subCategories, handleSelectedItem, selectedCategoryId }) => {
+const CategoriesAndSubCategories = ({ categories, subCategories, handleSelectedItem, selectedCategoryId }) => {
     return <>
         <div className="categories">
             {categories.map((category) => (
@@ -23,7 +23,7 @@ export const CategoriesAndSubCategories = ({ categories, subCategories, handleSe
         </div>
         <Divider className="line-breaker" />
         <div className="sub-categories">
-            {subCategories.map((subCategory) => (
+            {subCategories?.map((subCategory) => (
                 <CategoryCard
                     handleSelectedItem={handleSelectedItem}
                     key={subCategory.subCategoryId}
@@ -33,6 +33,9 @@ export const CategoriesAndSubCategories = ({ categories, subCategories, handleSe
                     type={SUBCATEGORY}
                 />
             ))}
+            {(Array.isArray(subCategories) && !subCategories.length) && <p>No sub-categories are present for this category</p>}
         </div>
     </>
 }
+
+export default CategoriesAndSubCategories;

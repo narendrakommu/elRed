@@ -1,13 +1,10 @@
 import { Card, Typography } from "antd";
-import { VARIANT } from "./mainContent/content/ContentBody";
-// import Title from "antd/es/skeleton/Title";
+import { PRODUCT, VARIANT, defaultImage } from "./constants";
 
-const { Title, Paragraph, Text } = Typography;
+const { Title, Paragraph } = Typography;
 const { Meta } = Card;
 
-const defaultImage = `https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.explicit.bing.net%2Fth%3Fid%3DOIP.JghoYNfLDAu_AH6xfpBYpQHaHa%26pid%3DApi&f=1&ipt=6bcb753956e563a3a67e9669fdea96a05a12edfb077f7faa6c0ac7f31992396f&ipo=images`;
-
-export const CategoryCard = ({
+const CategoryCard = ({
     id,
     imageUrl,
     name,
@@ -19,13 +16,13 @@ export const CategoryCard = ({
     drawerOpen,
     item,
     variants = {},
-    grossPrice, saleDescription, bpCatalogNumber
+    grossPrice, discription, bpCatalogNumber,
 }) => {
 
     return (
         <Card
             key={id}
-            className={`${type === VARIANT || 'card'} ${[...customClass]}`}
+            className={`${type === VARIANT || type === PRODUCT || 'card'} ${[...customClass]}`}
             onClick={() => {
                 if (type !== VARIANT) {
                     handleSelectedItem({ id, type, item });
@@ -36,7 +33,7 @@ export const CategoryCard = ({
             hoverable
             type="inner"
         >
-            {(type !== VARIANT) ? (<>
+            {(type !== VARIANT && type !== PRODUCT) ? (<>
                 <Title
                     className={`card-name`}
                     level={5}
@@ -54,19 +51,23 @@ export const CategoryCard = ({
                 </Paragraph>
                 }
             </>) : <Meta title={<div className="meta-title-wrap">
-                <span className="variant-catalog-number">{`#${bpCatalogNumber}`}</span>
-                <div className="variant-item-discription">
-                    {variants.itemDescription}
-                    <span>
-                        {variants?.currency?.symbol}{grossPrice}
-                    </span>
-                </div>
+                {(type === VARIANT) ? <>
+                    <span className="variant-catalog-number">{`#${bpCatalogNumber}`}</span>
+                    <div className="variant-item-discription">
+                        {variants.itemDescription}
+                        <span>
+                            {variants?.currency?.symbol}{grossPrice}
+                        </span>
+                    </div>
+                </> : name}
             </div>} description={<Paragraph ellipsis={{
-                tooltip: saleDescription,
+                tooltip: discription,
                 rows: 2,
             }} className={`variant-sale-description`}>
-                {saleDescription}
+                {discription}
             </Paragraph>} />}
         </Card>
     );
 };
+
+export default CategoryCard;

@@ -5,7 +5,7 @@ import {
 
 const { Paragraph, Text, Title } = Typography;
 
-export const orderListcolumns = ({ isCart, handleOrderList, list, setDrawerOpen=()=> {} }) => {
+export const orderListcolumns = ({ isCart, handleOrderList, list }) => {
     let columnsData = [ ];
 	[ 'Products', 'Quantity', 'Price' ].forEach((ele) => {
 		columnsData.push({

@@ -1,17 +1,17 @@
 import { Layout } from 'antd';
-import { CategoryCard } from '../../CategoryCard';
-import { SUBCATEGORY } from './ContentBody';
+import CategoryCard from '../../CategoryCard';
 import { HomeFilled } from "@ant-design/icons";
+import { SUBCATEGORY } from '../../constants';
 
 const { Footer } = Layout;
 
-export const ContentFooter = ({ subCategories, handleSelectedItem, handleSubCategoryProducts, handleSelectedSubCategoryId, selectedSubCategoryId }) => {
+const ContentFooter = ({ subCategories, handleSelectedItem, handleSubCategoryProducts, handleSelectedSubCategoryId, selectedSubCategoryId }) => {
     return <Footer className='content-footer'>
         <div className='home-wrapper'>
             <HomeFilled onClick={() => { handleSubCategoryProducts(null); handleSelectedSubCategoryId(''); }} className='footer-home' />
         </div>
         <div className="footer-sub-categories">
-            {subCategories.map((subCategory) => (
+            {subCategories?.map((subCategory) => (
                 <div className='perspective-wrapper'>
                     <CategoryCard
                         handleSelectedItem={handleSelectedItem}
@@ -31,3 +31,5 @@ export const ContentFooter = ({ subCategories, handleSelectedItem, handleSubCate
         </div>
     </Footer>
 }
+
+export default ContentFooter;

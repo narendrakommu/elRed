@@ -1,12 +1,12 @@
-import { Button, Card, Drawer, InputNumber, Space, Table, Typography, message } from "antd"
-import { CategoryCard } from "../../CategoryCard"
+import { Button, Card, Drawer, InputNumber, Space, Typography } from "antd"
+import CategoryCard from "../../CategoryCard"
 import { useEffect, useState } from "react"
-import { COLORDESCRIPTION, VARIANT } from "./ContentBody";
-import { OrderListTable } from "./OrderListTable";
+import OrderListTable from "./OrderListTable";
+import { COLORDESCRIPTION, VARIANT } from "../../constants";
 
 const { Text, Title } = Typography;
 
-export const ProductDrawer = ({ isEditOrders, handleOrderList, orderList, onDrawerClose, drawerOpen, selectedProduct = { variants: [] }, handleCart, handleDeleteorderItem }) => {
+const ProductDrawer = ({ handleOrderList, orderList, onDrawerClose, drawerOpen, selectedProduct = { variants: [] }, handleCart, handleDeleteorderItem }) => {
     const [variants, setVariants] = useState({});
     const [selectedVariant, setSelectedVariant] = useState({ packingDescription: selectedProduct?.variants[0]?.packingDescription || '', colorDescription: selectedProduct?.variants[0]?.colorDescription || '' });
     const [quantity, setQuantity] = useState(20);
@@ -68,7 +68,7 @@ export const ProductDrawer = ({ isEditOrders, handleOrderList, orderList, onDraw
                 imageUrl={variants?.productImages?.find(ele => ele)}
                 type={VARIANT}
                 grossPrice={grossPrice}
-                saleDescription={saleDescription}
+                discription={saleDescription}
                 bpCatalogNumber={bpCatalogNumber}
                 variantId={variantId}
             />
@@ -91,3 +91,5 @@ export const ProductDrawer = ({ isEditOrders, handleOrderList, orderList, onDraw
         <OrderListTable handleOrderList={handleOrderList} orderList={orderList} handleDeleteorderItem={handleDeleteorderItem} handleCart={handleCart} onDrawerClose={onDrawerClose} />
     </Drawer>
 }
+
+export default ProductDrawer;

@@ -1,20 +1,12 @@
 import { Input, Typography, Layout } from "antd";
 import { SearchOutlined, ArrowLeftOutlined } from "@ant-design/icons";
-import { useEffect, useState } from "react";
-import { CategoriesAndSubCategories } from "./CategoriesAndSubCategories";
-import { Products } from "./Products";
+import CategoriesAndSubCategories from "./CategoriesAndSubCategories";
+import Products from "./Products";
 
 const { Content } = Layout;
 const { Title } = Typography;
 
-export const CATEGORY = 'CATEGORY';
-export const SUBCATEGORY = 'SUBCATEGORY';
-export const PRODUCT = 'PRODUCT';
-export const VARIANT = 'VARIANT';
-export const PACKINGDESCRIPTION = 'PACKINGDESCRIPTION';
-export const COLORDESCRIPTION = 'COLORDESCRIPTION';
-
-export const ContentBody = ({ orderList, handleOrderList, handleSubCategoryProducts, subCategoryProducts, subCategories, handleSelectedSubCategoryId, handleSelectedItem, categories, selectedCategoryId, selectedProduct, handleSelectedProduct, handleCart, handleDeleteorderItem, isEditOrders, setIsEditOrders, onDrawerClose, drawerOpen, setDrawerOpen }) => {
+const ContentBody = ({ orderList, handleOrderList, handleSubCategoryProducts, subCategoryProducts, subCategories, handleSelectedSubCategoryId, handleSelectedItem, categories, selectedCategoryId, selectedProduct, handleSelectedProduct, handleCart, handleDeleteorderItem, isEditOrders, setIsEditOrders, onDrawerClose, drawerOpen, setDrawerOpen }) => {
 
     return <Content className="content-body">
         <div className="content-header">
@@ -34,3 +26,5 @@ export const ContentBody = ({ orderList, handleOrderList, handleSubCategoryProdu
         }
     </Content>
 }
+
+export default ContentBody;

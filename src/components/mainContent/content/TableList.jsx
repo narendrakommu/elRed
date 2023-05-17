@@ -1,12 +1,12 @@
 import { Table } from "antd"
-import { orderListDatasource, orderListcolumns } from "../../../constants"
+import { orderListDatasource, orderListcolumns } from "../../helperMethods"
 
 
-export const TableList = ({ list, handleDeleteorderItem = () => { }, isCart, handleOrderList, setDrawerOpen }) => {
+const TableList = ({ list, handleDeleteorderItem = () => { }, isCart, handleOrderList }) => {
     return (
         <Table
             columns={
-                orderListcolumns({ isCart, handleOrderList, list, setDrawerOpen })
+                orderListcolumns({ isCart, handleOrderList, list })
             }
             pagination={false}
             bordered
@@ -17,3 +17,5 @@ export const TableList = ({ list, handleDeleteorderItem = () => { }, isCart, han
         />
     )
 }
+
+export default TableList;
