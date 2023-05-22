@@ -65,18 +65,23 @@ const shopListSlice = createSlice({
             }
         },
         handleAddToOrderList: (state, action) => {
+            let {isEdit, list} = action.payload;
             let isItemExist = false;
-            let newList = state.orderList.map(order => {
-                if (order.variantId === action.payload.variantId) {
-                    isItemExist = true;
-                    return { ...order, quantity: parseInt(action.payload.quantity), grossPrice: parseInt(action.payload.grossPrice) }
-                }
-                return order;
-            })
-            if(isItemExist) {
-                state.orderList = newList;
+            if(isEdit) {
+                state.orderList = list;
             } else {
-                state.orderList = [...state.orderList, action.payload];
+                let newList = state.orderList.map(order => {
+                    if (order.variantId === action.payload.variantId) {
+                        isItemExist = true;
+                        return { ...order, quantity: parseInt(action.payload.quantity), grossPrice: parseInt(action.payload.grossPrice) }
+                    }
+                    return order;
+                })
+                if(isItemExist) {
+                    state.orderList = newList;
+                } else {
+                    state.orderList = [...state.orderList, action.payload];
+                }
             }
         },
         handleOrderDelete: (state, action) => {

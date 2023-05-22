@@ -1,7 +1,7 @@
 import { Button, Card, Drawer, InputNumber, Space, Typography } from "antd"
 import { useEffect, useState } from "react"
 import { OrderListTable, CategoryCard } from "../components";
-import { VARIANT } from "../constants";
+import { VARIANT, defaultImage } from "../constants";
 import { useDispatch, useSelector } from "react-redux";
 import { handleAddToOrderList } from "../redux/shopListSlice";
 import { handleDrawerOpen } from "../redux/shopListSlice";
@@ -60,7 +60,7 @@ const ProductDrawer = ({ }) => {
     }
 
     const handleOnAddToOrderList = () => {
-        let data = { quantity, productName: variants.productName, packingDescription, colorDescription, grossPrice: parseInt(quantity) * parseInt(grossPrice), variantId, productId: variants.productId, symbol: variants?.currency?.symbol, imageUrl: variants?.productImages?.find(ele => ele), categoryId: variants.categoryId, subCategoryId: variants.subCategoryId, };
+        let data = { quantity, productName: variants.productName, packingDescription, colorDescription, grossPrice: parseInt(quantity) * parseInt(grossPrice), variantId, productId: variants.productId, symbol: variants?.currency?.symbol, imageUrl: variants?.productImages?.find(ele => ele) || defaultImage, categoryId: variants.categoryId, subCategoryId: variants.subCategoryId, };
         dispatch(handleAddToOrderList(data));
     }
 

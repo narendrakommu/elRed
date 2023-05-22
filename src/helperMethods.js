@@ -8,7 +8,7 @@ const { Paragraph, Text } = Typography;
 
 const handleOnEditClick = ({dispatch, list}) => {
     dispatch(handleDrawerOpen(true));
-    dispatch(handleAddToOrderList(list));
+    dispatch(handleAddToOrderList({list, isEdit: true}));
 }
 
 export const orderListcolumns = ({ isCart, list=[], dispatch }) => {
