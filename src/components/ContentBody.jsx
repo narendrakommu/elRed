@@ -1,17 +1,26 @@
-import { Input, Typography, Layout } from "antd";
+import { Input, Typography, Layout, Divider } from "antd";
 import { SearchOutlined, ArrowLeftOutlined } from "@ant-design/icons";
-import { Products, CategoriesAndSubCategories } from "../components";
+import { Products, Categories, SubCategories } from "../components";
+import { useDispatch, useSelector } from "react-redux";
+import { handleClearProducts, handleSelectedSubCategoryId } from "../redux/shopListSlice";
 
 const { Content } = Layout;
 const { Title } = Typography;
 
-const ContentBody = ({ orderList, handleOrderList, handleSubCategoryProducts, subCategoryProducts, subCategories, handleSelectedSubCategoryId, handleSelectedItem, categories, selectedCategoryId, selectedProduct, handleSelectedProduct, handleCart, handleDeleteorderItem, isEditOrders, setIsEditOrders, onDrawerClose, drawerOpen, setDrawerOpen }) => {
+const ContentBody = ({ }) => {
+    const dispatch = useDispatch();
+    const selectedSubCategoryId = useSelector((state) => state.shopList.selectedSubCategoryId);
+
+    const handleArrowClick = () => {
+        dispatch(handleClearProducts());
+        dispatch(handleSelectedSubCategoryId(''));
+    }
 
     return <Content className="content-body">
         <div className="content-header">
             <Title className="content-title" level={4}>
-                {!subCategoryProducts ? 'Print Heads' : (<>
-                    <ArrowLeftOutlined onClick={() => { handleSubCategoryProducts(null); handleSelectedSubCategoryId(''); }} className='product-arrow' />All Products
+                {!selectedSubCategoryId ? 'Print Heads' : (<>
+                    <ArrowLeftOutlined onClick={handleArrowClick} className='product-arrow' />All Products
                 </>)}
             </Title>
             <Input
@@ -20,8 +29,11 @@ const ContentBody = ({ orderList, handleOrderList, handleSubCategoryProducts, su
                 prefix={<SearchOutlined />}
             />
         </div>
-        {!subCategoryProducts ? (
-            <CategoriesAndSubCategories categories={categories} handleSelectedItem={handleSelectedItem} subCategories={subCategories} selectedCategoryId={selectedCategoryId} />) : (<Products handleSelectedProduct={handleSelectedProduct} subCategoryProducts={subCategoryProducts} handleSelectedItem={handleSelectedItem} selectedProduct={selectedProduct} handleCart={handleCart} orderList={orderList} handleOrderList={handleOrderList} handleDeleteorderItem={handleDeleteorderItem} isEditOrders={isEditOrders} setIsEditOrders={setIsEditOrders} drawerOpen={drawerOpen} onDrawerClose={onDrawerClose} setDrawerOpen={setDrawerOpen} />)
+        {!selectedSubCategoryId ? (<>
+            <Categories />
+            <Divider className="line-breaker" />
+            <SubCategories />
+        </>) : <Products />
         }
     </Content>
 }

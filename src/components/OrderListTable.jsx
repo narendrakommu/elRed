@@ -1,19 +1,23 @@
-import { Button, Table, Typography } from "antd";
+import { Button, Typography } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import { TableList } from "../components";
+import { useDispatch, useSelector } from "react-redux";
+import { handleCart, handleDrawerOpen } from "../redux/shopListSlice";
 
-const { Text, Title } = Typography;
+const { Title } = Typography;
 
-const OrderListTable = ({ orderList = [], handleDeleteorderItem, handleOrderList, handleCart, onDrawerClose }) => {
+const OrderListTable = ({ }) => {
+    const dispatch = useDispatch();
+    const orderList = useSelector(state => state.shopList.orderList);
 
     return (
         <div className="variant-table-wrap">
             <div className="table-heading">
                 <Title style={{ margin: 0 }} level={3}>Order List</Title>
-                <CloseOutlined onClick={() => { onDrawerClose() }} />
+                <CloseOutlined onClick={() => { dispatch(handleDrawerOpen(false)) }} />
             </div>
-            <TableList list={orderList} handleDeleteorderItem={handleDeleteorderItem} />
-            <Button disabled={!orderList.length} className="add-cart" type="primary" onClick={() => { handleCart({ data: orderList }); handleOrderList({ data: null, isClearAll: true }); onDrawerClose(true); }}>Add to cart</Button>
+            <TableList list={orderList} />
+            <Button disabled={!orderList.length} className="add-cart" type="primary" onClick={() => { dispatch(handleDrawerOpen(false)); dispatch(handleCart({ type: 'add', data: orderList })) }}>Add to cart</Button>
         </div>
     );
 }

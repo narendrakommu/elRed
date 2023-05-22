@@ -1,10 +1,14 @@
-import { Table, Layout, Row, Col, Divider, Space, Button, Typography, message } from "antd";
+import { Layout, Row, Col, Divider, Space, Button, Typography, message } from "antd";
 import { TableList } from "../components";
+import { useDispatch, useSelector } from "react-redux";
+import { handleCart } from "../redux/shopListSlice";
 
 const { Title } = Typography;
 const { Sider } = Layout;
 
-const Cart = ({ cart = [], handleCart, handleOrderList }) => {
+const Cart = ({ }) => {
+    const cart = useSelector(state => state.shopList.cart);
+    const dispatch = useDispatch();
     const totalGross = cart.reduce((acc, curr) => acc + parseInt(curr.grossPrice), 0);
     const taxableAmnt = Math.floor(0.27 * totalGross);
     const tax = Math.floor(0.09 * totalGross);
@@ -16,9 +20,13 @@ const Cart = ({ cart = [], handleCart, handleOrderList }) => {
         })
     };
 
+    const clearCart = () => {
+        dispatch(handleCart({ type: 'clearAll' }))
+    }
+
     return (
         <Sider className="main-content-layout-sidebar">
-            <TableList list={cart} isCart={true} handleOrderList={handleOrderList} />
+            <TableList list={cart} isCart={true} />
             {cart.length > 0 && <div className="cart-price-details">
                 {['items total', 'SGST(9%)', 'CGST(9%)', 'IGST(9%)', 'Taxable Amnt'].map(ele => <Row className="row-child">
                     <Col className='column-header' span={18}>{ele}</Col>
@@ -35,8 +43,8 @@ const Cart = ({ cart = [], handleCart, handleOrderList }) => {
                         </Col>
                     </Row>
                     <Space style={{ justifyContent: 'center', display: 'flex' }}>
-                        <Button onClick={() => { handleCart({ clearAll: true }) }}>Clear Cart</Button>
-                        <Button onClick={() => { handleCart({ clearAll: true }); success() }}>Place Order</Button>
+                        <Button onClick={() => { clearCart(); }}>Clear Cart</Button>
+                        <Button onClick={() => { clearCart(); success(); }}>Place Order</Button>
                     </Space>
                 </div>
             </div>}

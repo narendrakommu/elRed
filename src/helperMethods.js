@@ -2,14 +2,22 @@ import { Typography, Tooltip, Image } from "antd";
 import {
     MinusCircleOutlined, EditOutlined
 } from "@ant-design/icons";
+import { handleDrawerOpen, handleOrderDelete, handleAddToOrderList } from "./redux/shopListSlice";
 
-const { Paragraph, Text, Title } = Typography;
+const { Paragraph, Text } = Typography;
 
-export const orderListcolumns = ({ isCart, handleOrderList, list=[] }) => {
+const handleOnEditClick = ({dispatch, list}) => {
+    dispatch(handleDrawerOpen(true));
+    dispatch(handleAddToOrderList(list));
+}
+
+export const orderListcolumns = ({ isCart, list=[], dispatch }) => {
     let columnsData = [ ];
 	[ 'Products', 'Quantity', 'Price' ].forEach((ele) => {
 		columnsData.push({
-			title: () => <Tooltip mouseEnterDelay={0.7} title={ele}>{(ele === 'Price') && isCart && list.length ? <div className="price-title-wrap">{ele}{<EditOutlined className='edit-icon' onClick={() => {handleOrderList({data: list, isEdit: true})}}/>}</div> : ele}</Tooltip>,
+			title: () => <Tooltip mouseEnterDelay={0.7} title={ele}>{(ele === 'Price') && isCart && list.length ? <div className="price-title-wrap">{ele}{<EditOutlined className='edit-icon' onClick={() => {
+                handleOnEditClick({dispatch, list});
+            }}/>}</div> : ele}</Tooltip>,
 			dataIndex: ele,
 			key: ele,
 			className: 'order-list-table-ellipsis',
@@ -20,8 +28,6 @@ export const orderListcolumns = ({ isCart, handleOrderList, list=[] }) => {
                             <Image
                                 className="product-logo"
                                 preview={false}
-                                // width={25}
-                                // height={25}
                                 src={record.imageUrl}
                             />
                             <div className="product-text">
@@ -58,7 +64,11 @@ export const orderListcolumns = ({ isCart, handleOrderList, list=[] }) => {
 	return columnsData;
 };
 
-export const orderListDatasource = ({list=[], handleDeleteorderItem, isCart}) => {
+const handleOrderItemRemove = ({dispatch, variantId}) => {
+   dispatch(handleOrderDelete(variantId))
+}
+
+export const orderListDatasource = ({list=[], dispatch, isCart}) => {
     return list.map(ele => {
         const {
             productName, 
@@ -87,11 +97,11 @@ export const orderListDatasource = ({list=[], handleDeleteorderItem, isCart}) =>
                     <MinusCircleOutlined
                         className="table-action"
                         onClick={() => {
-                            handleDeleteorderItem(variantId);
+                            handleOrderItemRemove({dispatch, variantId});
                         }}
                     />
                 </div>
         }
         return item;
-})
+    })
 };

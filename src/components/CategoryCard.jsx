@@ -8,15 +8,14 @@ const CategoryCard = ({
     id,
     imageUrl,
     name,
-    handleSelectedItem = () => { },
+    handleCardSelect = () => { },
     type,
     customClass = [''],
     subText,
-    callBack = () => { },
-    drawerOpen,
-    item,
     variants = {},
-    grossPrice, discription, bpCatalogNumber,
+    grossPrice,
+    discription,
+    bpCatalogNumber,
 }) => {
 
     return (
@@ -25,8 +24,7 @@ const CategoryCard = ({
             className={`${type === VARIANT || type === PRODUCT || 'card'} ${[...customClass]}`}
             onClick={() => {
                 if (type !== VARIANT) {
-                    handleSelectedItem({ id, type, item });
-                    !drawerOpen && callBack();
+                    handleCardSelect(id);
                 }
             }}
             cover={<img alt={name || variants?.itemDescription} src={imageUrl || defaultImage} />}

@@ -1,56 +1,75 @@
 import { Button, Card, Drawer, InputNumber, Space, Typography } from "antd"
 import { useEffect, useState } from "react"
 import { OrderListTable, CategoryCard } from "../components";
-import { COLORDESCRIPTION, VARIANT } from "../constants";
+import { VARIANT } from "../constants";
+import { useDispatch, useSelector } from "react-redux";
+import { handleAddToOrderList } from "../redux/shopListSlice";
+import { handleDrawerOpen } from "../redux/shopListSlice";
 
 const { Text, Title } = Typography;
 
-const ProductDrawer = ({ handleOrderList, orderList, onDrawerClose, drawerOpen, selectedProduct = { variants: [] }, handleCart, handleDeleteorderItem }) => {
+const ProductDrawer = ({ }) => {
+    const selectedProductId = useSelector(state => state.shopList.selectedProductId);
+    const selectedSubCategoryId = useSelector(state => state.shopList.selectedSubCategoryId);
+    const isDrawerOpen = useSelector(state => state.shopList.isDrawerOpen);
+    const products = useSelector(state => state.shopList.products);
     const [variants, setVariants] = useState({});
-    const [selectedVariant, setSelectedVariant] = useState({ packingDescription: selectedProduct?.variants[0]?.packingDescription || '', colorDescription: selectedProduct?.variants[0]?.colorDescription || '' });
+    const [selectedVariant, setSelectedVariant] = useState({});
     const [quantity, setQuantity] = useState(20);
+    const [isQunatityOutRange, setIsQunatityOutRange] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState({});
+    const dispatch = useDispatch();
 
-    const { grossPrice, saleDescription, bpCatalogNumber, variantId } = variants[`${selectedVariant.packingDescription}_${selectedVariant.colorDescription}`] || {};
-
-    const handleVariantChange = ({ changeType, value }) => {
-        if (changeType === COLORDESCRIPTION) {
-            setSelectedVariant(prev => ({ ...prev, colorDescription: value }))
-        } else {
-            setSelectedVariant(prev => ({ ...prev, packingDescription: value }))
-        }
-    }
-    useEffect(() => {
-        if (Object.keys(variants).length && !variants[`${selectedVariant.packingDescription}_${selectedVariant.colorDescription}`]) {
-            alert('This variant combination is out of stock. Please select another combo.')
-        }
-    }, [selectedVariant])
+    console.log({ selectedProductId, selectedSubCategoryId, products, variants })
 
     useEffect(() => {
-        let list = { itemDescription: selectedProduct?.itemDescription, currency: selectedProduct?.currency, productImages: selectedProduct?.productImages, productId: selectedProduct?.productId, packingDescriptionList: [], colorDescriptionList: [] };
-        selectedProduct?.variants?.forEach(obj => {
-            list[`${obj.packingDescription}_${obj.colorDescription}`] = { ...obj };
-            if (!list.packingDescriptionList.includes(obj.packingDescription)) {
-                list.packingDescriptionList.push(obj.packingDescription);
-            }
-            if (!list.colorDescriptionList.includes(obj.colorDescription)) {
-                list.colorDescriptionList.push(obj.colorDescription);
+        selectedSubCategoryId && setSelectedProduct(products[selectedSubCategoryId]?.find(ele => ele.productId === selectedProductId))
+    }, [selectedProductId])
+
+    const { grossPrice, saleDescription, bpCatalogNumber, variantId, packingDescription, colorDescription } = selectedVariant || {};
+
+    useEffect(() => {
+        let list = { productName: selectedProduct?.itemDescription, currency: selectedProduct?.currency, productImages: selectedProduct?.productImages, productId: selectedProduct?.productId, categoryId: selectedProduct.categoryId, subCategoryId: selectedProduct.subCategoryId, colorDescriptions: {} };
+        selectedProduct?.variants?.forEach(variant => {
+            if (list.colorDescriptions[variant.colorDescription]) {
+                list.colorDescriptions[variant.colorDescription].push({ ...variant });
+            } else {
+                list.colorDescriptions[variant.colorDescription] = [{ ...variant }];
             }
         })
-        setSelectedVariant({ packingDescription: selectedProduct?.variants[0]?.packingDescription || '', colorDescription: selectedProduct?.variants[0]?.colorDescription || '' })
         setVariants(list);
+        setSelectedVariant((Object.values(list.colorDescriptions)[0] || [])[0]);
     }, [selectedProduct])
 
     const onChange = (value) => {
+        if (value < 12) {
+            setIsQunatityOutRange({ errorMessage: 'Minimum orders 12*' })
+        } else if (value > 100) {
+            setIsQunatityOutRange({ errorMessage: 'Maximum orders 100*' })
+        } else {
+            setIsQunatityOutRange(false)
+        }
         setQuantity(value);
     };
+
+    const handleColorDescriptionChange = (color) => {
+        setSelectedVariant(variants.colorDescriptions[color][0]);
+    }
+    const handlePackageDescriptionChange = ({ variantId, color }) => {
+        setSelectedVariant(variants.colorDescriptions[color].find(ele => ele.variantId === variantId));
+    }
+
+    const handleOnAddToOrderList = () => {
+        let data = { quantity, productName: variants.productName, packingDescription, colorDescription, grossPrice: parseInt(quantity) * parseInt(grossPrice), variantId, productId: variants.productId, symbol: variants?.currency?.symbol, imageUrl: variants?.productImages?.find(ele => ele), categoryId: variants.categoryId, subCategoryId: variants.subCategoryId, };
+        dispatch(handleAddToOrderList(data));
+    }
 
     return <Drawer
         className="product-drawer"
         placement="right"
-        // size={'large'}
         closable={false}
-        onClose={onDrawerClose}
-        open={drawerOpen}
+        onClose={() => { dispatch(handleDrawerOpen(false)) }}
+        open={isDrawerOpen}
     >   <div className="variant-info">
             <Title style={{
                 marginTop: 0,
@@ -60,7 +79,6 @@ const ProductDrawer = ({ handleOrderList, orderList, onDrawerClose, drawerOpen, 
             </Title>
             <CategoryCard
                 customClass={["variant-card"]}
-                handleVariantChange={handleVariantChange}
                 selectedVariant={selectedVariant}
                 variants={variants}
                 key={variants?.productId}
@@ -73,21 +91,24 @@ const ProductDrawer = ({ handleOrderList, orderList, onDrawerClose, drawerOpen, 
             />
             <Card className="color-description-card" title="Please select Color Description">
                 <Space className="color-description-space" wrap>
-                    {variants.colorDescriptionList?.map(ele => <Button key={ele} onClick={() => { handleVariantChange({ changeType: COLORDESCRIPTION, value: ele }) }} className={`color-description-item ${ele === selectedVariant.colorDescription ? 'highlight' : ''}`}>{ele}</Button>)}
+                    {Object.keys(variants.colorDescriptions || {})?.map(ele => <Button key={ele} onClick={() => { handleColorDescriptionChange(ele) }} className={`color-description-item ${ele === selectedVariant.colorDescription ? 'highlight' : ''}`}>{ele}</Button>
+                    )}
                 </Space>
             </Card>
             <Card className="package-description-card" title="Please select Packaging Description">
                 <Space className="package-description-space" wrap>
-                    {variants.packingDescriptionList?.map(ele => <Button key={ele} onClick={() => { handleVariantChange({ value: ele }) }} className={`package-description-item ${ele === selectedVariant.packingDescription ? 'highlight' : ''}`} >{ele}</Button>)}
+                    {Object.keys(variants.colorDescriptions || {}).length && variants.colorDescriptions[selectedVariant.colorDescription]?.map(ele => <Button key={ele.variantId} onClick={() => { handlePackageDescriptionChange({ variantId: ele.variantId, color: ele.colorDescription }) }} className={`package-description-item ${ele.variantId === selectedVariant.variantId ? 'highlight' : ''}`} >{ele.packingDescription}</Button>)}
                 </Space>
             </Card>
             <Card className="quantity-card" title="Enter Quantity">
-                <InputNumber className="qunatity-number" value={quantity} min={12} max={100} defaultValue={20} onChange={onChange} />
-                <Text className='quantity-warning'>*Minimum quantity should be 12</Text>
+                <InputNumber className="qunatity-number" value={quantity} defaultValue={20} onChange={onChange} />
+                {isQunatityOutRange && <Text className='quantity-warning'>{isQunatityOutRange.errorMessage}</Text>}
             </Card>
-            <Button style={{ marginBottom: 25 }} disabled={!variants[`${selectedVariant.packingDescription}_${selectedVariant.colorDescription}`]} onClick={() => { handleOrderList({ data: { quantity, productName: variants.itemDescription, packingDescription: selectedVariant.packingDescription, colorDescription: selectedVariant.colorDescription, grossPrice: parseInt(quantity) * parseInt(grossPrice), variantId, productId: variants.productId, symbol: variants?.currency?.symbol, imageUrl: variants?.productImages?.find(ele => ele) } }) }}>Add</Button>
+            <Button style={{ marginBottom: 25 }} disabled={isQunatityOutRange} onClick={handleOnAddToOrderList}>
+                Add
+            </Button>
         </div>
-        <OrderListTable handleOrderList={handleOrderList} orderList={orderList} handleDeleteorderItem={handleDeleteorderItem} handleCart={handleCart} onDrawerClose={onDrawerClose} />
+        <OrderListTable />
     </Drawer>
 }
 
