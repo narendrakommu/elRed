@@ -1,14 +1,13 @@
 import { Typography, Tooltip, Image } from "antd";
-import {
-    MinusCircleOutlined, EditOutlined
-} from "@ant-design/icons";
-import { handleDrawerOpen, handleOrderDelete, handleAddToOrderList } from "./redux/shopListSlice";
+import { MinusCircleOutlined, EditOutlined } from "@ant-design/icons";
+import { handleDrawerOpen, handleOrderDelete, handleAddToOrderList, handleCartEdit } from "./redux/shopListSlice";
 
 const { Paragraph, Text } = Typography;
 
 const handleOnEditClick = ({dispatch, list}) => {
     dispatch(handleDrawerOpen(true));
-    dispatch(handleAddToOrderList({list, isEdit: true}));
+    dispatch(handleAddToOrderList({list, isEdit: true})); handleCartEdit
+    dispatch(handleCartEdit(true));
 }
 
 export const orderListcolumns = ({ isCart, list=[], dispatch }) => {

@@ -9,7 +9,8 @@ const initialState = {
     selectedProductId: '',
     cart: [],
     orderList: [],
-    isDrawerOpen: false
+    isDrawerOpen: false,
+    isCartEdit: false,
 }
 
 const shopListSlice = createSlice({
@@ -18,6 +19,9 @@ const shopListSlice = createSlice({
     reducers: {
         handleCategories: (state, action) => {
             state.categories = action.payload;
+        },
+        handleCartEdit: (state, action) => {
+            state.isCartEdit = action.payload;
         },
         handleSelectedCategoryId: (state, action) => {
             state.selectedCategoryId = action.payload;
@@ -84,6 +88,9 @@ const shopListSlice = createSlice({
                 }
             }
         },
+        handleClearOrderList: (state) => {
+            state.orderList = [];
+        },
         handleOrderDelete: (state, action) => {
             state.orderList = state.orderList.filter(ele => ele.variantId !== action.payload);
         },
@@ -93,6 +100,6 @@ const shopListSlice = createSlice({
     }
 })
 
-export const { handleCategories, handleSubCategories, handleProducts, handleSelectedCategoryId, handleSelectedSubCategoryId, handleSelectedProductId, handleCart, handleAddToOrderList, handleOrderDelete, handleDrawerOpen, handleClearProducts } = shopListSlice.actions;
+export const { handleCategories, handleSubCategories, handleProducts, handleSelectedCategoryId, handleSelectedSubCategoryId, handleSelectedProductId, handleCart, handleAddToOrderList, handleOrderDelete, handleDrawerOpen, handleClearProducts, handleClearOrderList, handleCartEdit } = shopListSlice.actions;
 
 export default shopListSlice.reducer;

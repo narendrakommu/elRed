@@ -9,6 +9,7 @@ const { Title } = Typography;
 const OrderListTable = ({ }) => {
     const dispatch = useDispatch();
     const orderList = useSelector(state => state.shopList.orderList);
+    const isCartEdit = useSelector(state => state.shopList.isCartEdit);
 
     return (
         <div className="variant-table-wrap">
@@ -17,7 +18,7 @@ const OrderListTable = ({ }) => {
                 <CloseOutlined onClick={() => { dispatch(handleDrawerOpen(false)) }} />
             </div>
             <TableList list={orderList} />
-            <Button disabled={!orderList.length} className="add-cart" type="primary" onClick={() => { dispatch(handleDrawerOpen(false)); dispatch(handleCart({ type: 'add', data: orderList })) }}>Add to cart</Button>
+            <Button disabled={!orderList.length || isCartEdit} className="add-cart" type="primary" onClick={() => { dispatch(handleDrawerOpen(false)); dispatch(handleCart({ type: 'add', data: orderList })) }}>Add to cart</Button>
         </div>
     );
 }

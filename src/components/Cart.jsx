@@ -1,7 +1,7 @@
 import { Layout, Row, Col, Divider, Space, Button, Typography, message } from "antd";
 import { TableList } from "../components";
 import { useDispatch, useSelector } from "react-redux";
-import { handleCart } from "../redux/shopListSlice";
+import { handleAddToOrderList, handleCart, handleClearOrderList } from "../redux/shopListSlice";
 
 const { Title } = Typography;
 const { Sider } = Layout;
@@ -20,8 +20,13 @@ const Cart = ({ }) => {
         })
     };
 
-    const clearCart = () => {
-        dispatch(handleCart({ type: 'clearAll' }))
+    const onClearCart = () => {
+        dispatch(handleCart({ type: 'clearAll' }));
+    }
+
+    const handlePlaceOrder = () => {
+        onClearCart();
+        dispatch(handleClearOrderList());
     }
 
     return (
@@ -43,8 +48,8 @@ const Cart = ({ }) => {
                         </Col>
                     </Row>
                     <Space style={{ justifyContent: 'center', display: 'flex' }}>
-                        <Button onClick={() => { clearCart(); }}>Clear Cart</Button>
-                        <Button onClick={() => { clearCart(); success(); }}>Place Order</Button>
+                        <Button onClick={() => { onClearCart(); }}>Clear Cart</Button>
+                        <Button onClick={() => { handlePlaceOrder(); success(); }}>Place Order</Button>
                     </Space>
                 </div>
             </div>}
