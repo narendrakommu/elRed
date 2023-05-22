@@ -6,7 +6,7 @@ const { Paragraph, Text } = Typography;
 
 const handleOnEditClick = ({dispatch, list}) => {
     dispatch(handleDrawerOpen(true));
-    dispatch(handleAddToOrderList({list, isEdit: true})); handleCartEdit
+    dispatch(handleAddToOrderList({list, isEdit: true}));
     dispatch(handleCartEdit(true));
 }
 
