@@ -1,15 +1,16 @@
 import { Table } from "antd"
 import { orderListDatasource, orderListcolumns } from "../helperMethods"
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 
 const TableList = ({ list, isCart }) => {
     const dispatch = useDispatch();
-    console.log(list)
+    const isCartEdit = useSelector(state => state.shopList.isCartEdit);
+
     return (
         <Table
             columns={
-                orderListcolumns({ isCart, list, dispatch })
+                orderListcolumns({ isCart, list, dispatch, isCartEdit })
             }
             pagination={false}
             bordered

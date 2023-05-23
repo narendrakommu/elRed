@@ -520,14 +520,18 @@ body {
 .price-title-wrap {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-around;
 }
 
 .product-logo {
   width: 25px;
   height: fit-content;
+}
+
+.cursor-pointer {
   cursor: pointer;
 }
+
 .main-content-layout-sidebar {
   .ant-table-cell {
     padding: 10px 0 !important;

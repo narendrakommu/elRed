@@ -19,7 +19,10 @@ const ContentFooter = ({ }) => {
 
     return <Footer className='content-footer'>
         <div className='home-wrapper'>
-            <HomeFilled onClick={() => { dispatch(handleClearProducts([])); dispatch(handleSelectedSubCategoryId('')); }} className='footer-home' />
+            <HomeFilled onClick={() => {
+                // dispatch(handleClearProducts([]));
+                dispatch(handleSelectedSubCategoryId(''));
+            }} className='footer-home' />
         </div>
         <div className="footer-sub-categories">
             {subCategories[selectedCategoryId]?.map((subCategory) => (

@@ -1,16 +1,21 @@
 import { Typography, Tooltip, Image } from "antd";
 import { MinusCircleOutlined, EditOutlined } from "@ant-design/icons";
-import { handleDrawerOpen, handleOrderDelete, handleAddToOrderList, handleCartEdit } from "./redux/shopListSlice";
+import { handleDrawerOpen, handleOrderDelete, handleCartEdit, handleVariantIdToBeReplaced, handleSelectedCategoryId, handleSelectedSubCategoryId, handleSelectedProductId, handleReplaceOrderList, handleOrderItemSelected } from "./redux/shopListSlice";
 
 const { Paragraph, Text } = Typography;
 
 const handleOnEditClick = ({dispatch, list}) => {
     dispatch(handleDrawerOpen(true));
-    dispatch(handleAddToOrderList({list, isEdit: true}));
+    dispatch(handleReplaceOrderList(list));
     dispatch(handleCartEdit(true));
 }
 
-export const orderListcolumns = ({ isCart, list=[], dispatch }) => {
+const handleOnTableItemClick = ({dispatch, record}) => {
+    const {variantId, categoryId, subCategoryId, productId} = record;
+    dispatch(handleOrderItemSelected({variantId, categoryId, subCategoryId, productId}));
+}
+
+export const orderListcolumns = ({ isCart, list=[], dispatch, isCartEdit }) => {
     let columnsData = [ ];
 	[ 'Products', 'Quantity', 'Price' ].forEach((ele) => {
 		columnsData.push({
@@ -25,9 +30,10 @@ export const orderListcolumns = ({ isCart, list=[], dispatch }) => {
                     return (
                         <div className="product-cell">
                             <Image
-                                className="product-logo"
+                                className={`product-logo ${!isCartEdit || 'cursor-pointer'}`}
                                 preview={false}
                                 src={record.imageUrl}
+                                onClick={() => { isCartEdit && handleOnTableItemClick({dispatch, record})}}
                             />
                             <div className="product-text">
                                 <Paragraph style={{width:70, margin:0}} ellipsis={{
@@ -78,7 +84,9 @@ export const orderListDatasource = ({list=[], dispatch, isCart}) => {
             quantity, 
             grossPrice,
             symbol,
-            imageUrl
+            imageUrl,
+            categoryId,
+            subCategoryId
         } = ele;
         let item = {
             Products: productName, 
@@ -89,7 +97,9 @@ export const orderListDatasource = ({list=[], dispatch, isCart}) => {
             variantId,
             productId,
             symbol,
-            imageUrl
+            imageUrl,
+            categoryId,
+            subCategoryId
         }
         if(!isCart) {
             item.actions = <div className="table-actions">

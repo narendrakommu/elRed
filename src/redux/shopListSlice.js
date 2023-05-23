@@ -11,6 +11,7 @@ const initialState = {
     orderList: [],
     isDrawerOpen: false,
     isCartEdit: false,
+    variantIdToBeReplaced: '',
 }
 
 const shopListSlice = createSlice({
@@ -43,37 +44,57 @@ const shopListSlice = createSlice({
         handleSelectedProductId: (state, action) => {
             state.selectedProductId = action.payload;
         },
+        handleVariantIdToBeReplaced: (state, action) => {
+            state.variantIdToBeReplaced = action.payload;
+        },
+        handleOrderItemSelected: (state, action) => {
+            const {productId, variantId, subCategoryId, categoryId} = action.payload;
+            state.variantIdToBeReplaced = variantId;
+            state.selectedProductId = productId;
+            state.selectedSubCategoryId = subCategoryId;
+            state.selectedCategoryId = categoryId;
+        },
         handleCart: (state, action) => {
             const {type, data} = action.payload;
             if(type === 'clearAll') {
                 state.cart = [];
-            } else if(type === 'add') {
-                if (state.cart.length) {
-                    let newList = [...state.cart];
-                    data.forEach(dataItem => {
-                        let isDataItemExist = false;
-                        newList = state.cart.map(cartItem => {
-                            if (cartItem.variantId === dataItem.variantId) {
-                                isDataItemExist = true;
-                                return { ...cartItem, quantity: parseInt(cartItem.quantity) + parseInt(dataItem.quantity), grossPrice: parseInt(cartItem.grossPrice) + parseInt(dataItem.grossPrice) };
-                            } else {
-                                return cartItem;
-                            }
-                        })
-                        !isDataItemExist && newList.push(dataItem);
-                    })
-                    state.cart = newList;
-                } else {
-                    state.cart = data;
-                }
+            } else {
+                state.cart = data;
             }
+            // else if(type === 'add') {
+            //     if (state.cart.length) {
+            //         let newList = [...state.cart];
+            //         data.forEach(dataItem => {
+            //             let isDataItemExist = false;
+            //             newList = state.cart.map(cartItem => {
+            //                 if (cartItem.variantId === dataItem.variantId) {
+            //                     isDataItemExist = true;
+            //                     return { ...cartItem, quantity: parseInt(cartItem.quantity) + parseInt(dataItem.quantity), grossPrice: parseInt(cartItem.grossPrice) + parseInt(dataItem.grossPrice) };
+            //                 } else {
+            //                     return cartItem;
+            //                 }
+            //             })
+            //             !isDataItemExist && newList.push(dataItem);
+            //         })
+            //         state.cart = newList;
+            //     } 
+                
+            // }
+        },
+        handleReplaceOrderList: (state, action) => {
+            state.orderList = action.payload;
         },
         handleAddToOrderList: (state, action) => {
-            let {isEdit, list} = action.payload;
-            let isItemExist = false;
-            if(isEdit) {
-                state.orderList = list;
+            if(state.variantIdToBeReplaced) {
+                state.orderList = state.orderList.map(ele => {
+                    if(ele.variantId === state.variantIdToBeReplaced) {
+                        ele = action.payload;
+                    }
+                    return ele;
+                })
+                state.variantIdToBeReplaced = '';
             } else {
+                let isItemExist = false;
                 let newList = state.orderList.map(order => {
                     if (order.variantId === action.payload.variantId) {
                         isItemExist = true;
@@ -93,6 +114,9 @@ const shopListSlice = createSlice({
         },
         handleOrderDelete: (state, action) => {
             state.orderList = state.orderList.filter(ele => ele.variantId !== action.payload);
+            if(action.payload === state.variantIdToBeReplaced) {
+                state.variantIdToBeReplaced = '';
+            }
         },
         handleDrawerOpen: (state, action) => {
             state.isDrawerOpen = action.payload;
@@ -100,6 +124,6 @@ const shopListSlice = createSlice({
     }
 })
 
-export const { handleCategories, handleSubCategories, handleProducts, handleSelectedCategoryId, handleSelectedSubCategoryId, handleSelectedProductId, handleCart, handleAddToOrderList, handleOrderDelete, handleDrawerOpen, handleClearProducts, handleClearOrderList, handleCartEdit } = shopListSlice.actions;
+export const { handleCategories, handleSubCategories, handleProducts, handleSelectedCategoryId, handleSelectedSubCategoryId, handleSelectedProductId, handleCart, handleAddToOrderList, handleOrderDelete, handleDrawerOpen, handleClearProducts, handleClearOrderList, handleCartEdit, handleVariantIdToBeReplaced, handleReplaceOrderList, handleOrderItemSelected } = shopListSlice.actions;
 
 export default shopListSlice.reducer;

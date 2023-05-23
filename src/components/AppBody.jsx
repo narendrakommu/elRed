@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 
 const AppBody = ({ }) => {
     const selectedSubCategoryId = useSelector((state) => state.shopList.selectedSubCategoryId);
+    // const isDrawerOpen = useSelector((state) => state.shopList.isDrawerOpen);
 
     return <Layout className='main-content-layout'>
         <Layout>

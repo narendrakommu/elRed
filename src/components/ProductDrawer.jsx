@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import { OrderListTable, CategoryCard } from "../components";
 import { VARIANT, defaultImage } from "../constants";
 import { useDispatch, useSelector } from "react-redux";
-import { handleAddToOrderList } from "../redux/shopListSlice";
+import { handleAddToOrderList, handleVariantIdToBeReplaced } from "../redux/shopListSlice";
 import { handleDrawerOpen } from "../redux/shopListSlice";
 
 const { Text, Title } = Typography;
@@ -11,7 +11,10 @@ const { Text, Title } = Typography;
 const ProductDrawer = ({ }) => {
     const selectedProductId = useSelector(state => state.shopList.selectedProductId);
     const selectedSubCategoryId = useSelector(state => state.shopList.selectedSubCategoryId);
+    const isCartEdit = useSelector(state => state.shopList.isCartEdit);
     const isDrawerOpen = useSelector(state => state.shopList.isDrawerOpen);
+    const variantIdToBeReplaced = useSelector(state => state.shopList.variantIdToBeReplaced);
+    const orderList = useSelector(state => state.shopList.orderList);
     const products = useSelector(state => state.shopList.products);
     const [variants, setVariants] = useState({});
     const [selectedVariant, setSelectedVariant] = useState({});
@@ -20,26 +23,38 @@ const ProductDrawer = ({ }) => {
     const [selectedProduct, setSelectedProduct] = useState({});
     const dispatch = useDispatch();
 
-    console.log({ selectedProductId, selectedSubCategoryId, products, variants })
-
-    useEffect(() => {
-        selectedSubCategoryId && setSelectedProduct(products[selectedSubCategoryId]?.find(ele => ele.productId === selectedProductId))
-    }, [selectedProductId])
-
     const { grossPrice, saleDescription, bpCatalogNumber, variantId, packingDescription, colorDescription } = selectedVariant || {};
 
     useEffect(() => {
-        let list = { productName: selectedProduct?.itemDescription, currency: selectedProduct?.currency, productImages: selectedProduct?.productImages, productId: selectedProduct?.productId, categoryId: selectedProduct.categoryId, subCategoryId: selectedProduct.subCategoryId, colorDescriptions: {} };
-        selectedProduct?.variants?.forEach(variant => {
-            if (list.colorDescriptions[variant.colorDescription]) {
-                list.colorDescriptions[variant.colorDescription].push({ ...variant });
-            } else {
-                list.colorDescriptions[variant.colorDescription] = [{ ...variant }];
+        selectedProductId && setSelectedProduct(products[selectedSubCategoryId]?.find(ele => ele.productId === selectedProductId) || {})
+    }, [selectedProductId])
+
+    useEffect(() => {
+        if (Object.keys(selectedProduct || {}).length) {
+            let list = { productName: selectedProduct?.itemDescription, currency: selectedProduct?.currency, productImages: selectedProduct?.productImages, productId: selectedProduct?.productId, categoryId: selectedProduct.categoryId, subCategoryId: selectedProduct.subCategoryId, colorDescriptions: {} };
+            selectedProduct?.variants?.forEach(variant => {
+                if (list.colorDescriptions[variant.colorDescription]) {
+                    list.colorDescriptions[variant.colorDescription].push({ ...variant });
+                } else {
+                    list.colorDescriptions[variant.colorDescription] = [{ ...variant }];
+                }
+            })
+            setVariants(list);
+            if (!isCartEdit) {
+                setSelectedVariant((Object.values(list.colorDescriptions)[0] || [])[0]);
             }
-        })
-        setVariants(list);
-        setSelectedVariant((Object.values(list.colorDescriptions)[0] || [])[0]);
+        }
     }, [selectedProduct])
+
+    useEffect(() => {
+        if (isCartEdit && Object.keys(variants).length) {
+            if (variantIdToBeReplaced) {
+                let orderItem = orderList.find(ele => ele.variantId === variantIdToBeReplaced);
+                setSelectedVariant(variants.colorDescriptions[orderItem.colorDescription].find(ele => ele.variantId === variantIdToBeReplaced));
+                setQuantity(orderItem.quantity);
+            }
+        }
+    }, [variants])
 
     const onChange = (value) => {
         if (value < 12) {
@@ -68,7 +83,7 @@ const ProductDrawer = ({ }) => {
         className="product-drawer"
         placement="right"
         closable={false}
-        onClose={() => { dispatch(handleDrawerOpen(false)) }}
+        onClose={() => { dispatch(handleDrawerOpen(false)); dispatch(handleVariantIdToBeReplaced('')); }}
         open={isDrawerOpen}
     >   <div className="variant-info">
             <Title style={{

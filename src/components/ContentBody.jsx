@@ -12,7 +12,7 @@ const ContentBody = ({ }) => {
     const selectedSubCategoryId = useSelector((state) => state.shopList.selectedSubCategoryId);
 
     const handleArrowClick = () => {
-        dispatch(handleClearProducts());
+        // dispatch(handleClearProducts());
         dispatch(handleSelectedSubCategoryId(''));
     }
 
