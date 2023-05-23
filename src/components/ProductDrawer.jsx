@@ -46,15 +46,23 @@ const ProductDrawer = ({ }) => {
         }
     }, [selectedProduct])
 
+    const handleColorDescriptionChange = (color) => {
+        setSelectedVariant(variants.colorDescriptions[color][0]);
+    }
+    const handlePackageDescriptionChange = ({ variantId, color }) => {
+        setSelectedVariant(variants.colorDescriptions[color].find(ele => ele.variantId === variantId));
+    }
+
     useEffect(() => {
-        if (isCartEdit && Object.keys(variants).length) {
-            if (variantIdToBeReplaced) {
-                let orderItem = orderList.find(ele => ele.variantId === variantIdToBeReplaced);
-                setSelectedVariant(variants.colorDescriptions[orderItem.colorDescription].find(ele => ele.variantId === variantIdToBeReplaced));
+        if (isCartEdit && Object.keys(variants).length && variantIdToBeReplaced) {
+            let orderItem = orderList.find(ele => ele.variantId === variantIdToBeReplaced);
+            let variantToBeReplaced = variants.colorDescriptions[orderItem.colorDescription].find(ele => ele.variantId === variantIdToBeReplaced)
+            if (variantToBeReplaced) {
+                setSelectedVariant(variantToBeReplaced);
                 setQuantity(orderItem.quantity);
             }
         }
-    }, [variants])
+    }, [variants, variantIdToBeReplaced])
 
     const onChange = (value) => {
         if (value < 12) {
@@ -66,13 +74,6 @@ const ProductDrawer = ({ }) => {
         }
         setQuantity(value);
     };
-
-    const handleColorDescriptionChange = (color) => {
-        setSelectedVariant(variants.colorDescriptions[color][0]);
-    }
-    const handlePackageDescriptionChange = ({ variantId, color }) => {
-        setSelectedVariant(variants.colorDescriptions[color].find(ele => ele.variantId === variantId));
-    }
 
     const handleOnAddToOrderList = () => {
         let data = { quantity, productName: variants.productName, packingDescription, colorDescription, grossPrice: parseInt(quantity) * parseInt(grossPrice), variantId, productId: variants.productId, symbol: variants?.currency?.symbol, imageUrl: variants?.productImages?.find(ele => ele) || defaultImage, categoryId: variants.categoryId, subCategoryId: variants.subCategoryId, };
